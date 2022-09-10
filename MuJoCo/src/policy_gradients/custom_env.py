@@ -7,6 +7,8 @@ import gym
 import random
 from .torch_utils import RunningStat, ZFilter, Identity, StateWithTime, RewardFilter
 
+from .envs.cartpole import CartPole
+
 class Env:
     '''
     A wrapper around the OpenAI gym environment that adds support for the following:
@@ -21,7 +23,10 @@ class Env:
     '''
     def __init__(self, game, norm_states, norm_rewards, params, add_t_with_horizon=None, clip_obs=None, clip_rew=None, 
             show_env=False, save_frames=False, save_frames_path=""):
-        self.env = gym.make(game)
+        if game == 'CartPole':
+            self.env = CartPole()
+        else:
+            self.env = gym.make(game)
         clip_obs = None if clip_obs < 0 else clip_obs
         clip_rew = None if clip_rew < 0 else clip_rew
 
