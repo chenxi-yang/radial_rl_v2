@@ -6,6 +6,8 @@ from gym.spaces.box import Box as Continuous
 import gym
 import random
 
+from vrl.env.walker2d import Walker2dEnv
+
 # from radial_rl_v2.MuJoCo.src.policy_gradients.envs.halfcheetah import HalfCheetahEnv
 from .torch_utils import RunningStat, ZFilter, Identity, StateWithTime, RewardFilter
 
@@ -13,6 +15,7 @@ from .envs.cartpole import CartPole
 from .envs.halfcheetah import HalfCheetahEnv
 from .envs.inverted_pendulum import InvertedPendulumEnv
 from .envs.hopper import HopperEnv
+from .envs.walker2d import Walker2dEnv
 
 class Env:
     '''
@@ -36,6 +39,8 @@ class Env:
             self.env = InvertedPendulumEnv()
         elif game == 'Hopper':
             self.env = HopperEnv()
+        elif game == 'Walker2d':
+            self.env = Walker2dEnv()
         else:
             self.env = gym.make(game)
         clip_obs = None if clip_obs < 0 else clip_obs
