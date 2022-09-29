@@ -227,7 +227,6 @@ def main(params):
         all_kl_certificates = []
         
         for i in range(num_episodes):
-            
             ## original_stdv = None with stdv dependent on state
             try:
                 ep_length, ep_reward, actions, action_means, states, kl_certificates = p.run_test(compute_bounds=params['compute_kl_cert'], use_full_backward=params['use_full_backward'], original_stdev=original_stdev)
@@ -259,7 +258,6 @@ def main(params):
                     print('terminating early!')
                     early_terminate = True
                     break
-                
     
         attack_dir = 'attack-{}-eps-{}'.format(params['attack_method'], params['attack_eps'])
         if 'sarsa' in params['attack_method']:

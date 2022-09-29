@@ -34,10 +34,10 @@ class Walker2dEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         terminated = not (height > 0.8 and height < 2.0 and ang > -1.0 and ang < 1.0)
         ob = self._get_obs()
 
-        if self.render_mode == "human":
-            self.render()
+        # if self.render_mode == "human":
+        #     self.render()
 
-        return ob, reward, terminated, False, {}
+        return ob, reward, terminated, {}
 
     def _get_obs(self):
         qpos = self.sim.data.qpos

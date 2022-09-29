@@ -6,8 +6,6 @@ from gym.spaces.box import Box as Continuous
 import gym
 import random
 
-from vrl.env.walker2d import Walker2dEnv
-
 # from radial_rl_v2.MuJoCo.src.policy_gradients.envs.halfcheetah import HalfCheetahEnv
 from .torch_utils import RunningStat, ZFilter, Identity, StateWithTime, RewardFilter
 
@@ -67,7 +65,6 @@ class Env:
                                             clip=clip_obs)
         if add_t_with_horizon is not None:
             self.state_filter = StateWithTime(self.state_filter, horizon=add_t_with_horizon)
-        
         # Support for rewards normalization
         self.reward_filter = Identity()
         if norm_rewards == "rewards":
@@ -139,6 +136,7 @@ class Env:
             image = Image.fromarray(image)
             image.save(path)
             self.frame_counter += 1
+        self.state_filter.reset()
         state = self.state_filter(state)
         self.total_true_reward += reward
         self.counter += 1

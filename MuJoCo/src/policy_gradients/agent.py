@@ -511,7 +511,10 @@ class Trainer():
         completed_episode_info = []
         for action, env in zip(actions, envs):
             gym_action = action[0].cpu().numpy()
+            # print(f"gym_action: {gym_action}")
             new_state, normed_reward, is_done, info = env.step(gym_action)
+            # print(f"new_state: {new_state}")
+            # print(f"normed_reward: {normed_reward}")
             if is_done:
                 completed_episode_info.append(info['done'])
                 new_state = env.reset()
@@ -1352,7 +1355,6 @@ class Trainer():
 
         iterator = range(max_len) if not should_tqdm else tqdm.trange(max_len)
 
-
         states[:, 0, :] = initial_states
         last_states = states[:, 0, :]
         
@@ -1376,7 +1378,7 @@ class Trainer():
             self.val_model.continue_history()
             if hasattr(self, "imit_network"):
                 self.imit_network.continue_history()
-
+            # print(maybe_attacked_last_states.shape)
             action_pds = self.policy_model(maybe_attacked_last_states)
             if hasattr(self, "imit_network"):
                 _ = self.imit_network(maybe_attacked_last_states) 
@@ -1390,16 +1392,15 @@ class Trainer():
                     raise RuntimeError(f"{max_eps} > {attack_eps}. Attack implementation has bug and eps is not correctly handled.")
             next_actions = self.policy_model.sample(action_pds)
 
-
             # if discrete, next_actions is (# actors, 1) 
             # otw if continuous (# actors, 1, action dim)
             next_actions = next_actions.unsqueeze(1)
-
             ret = self.multi_actor_step(next_actions, envs)
 
             # done_info = List of (length, reward) pairs for each completed trajectory
             # (next_rewards, next_states, next_dones) act like multi-actor env.step()
             done_info, next_rewards, next_states, next_not_dones = ret
+            # print(f"state shape: {next_states.shape}")
             # Reset the policy (if the policy has memory if we are done)
             if next_not_dones.item() == 0:
                 self.policy_model.reset()
@@ -1441,8 +1442,6 @@ class Trainer():
         states = states[0][:t+1]
 
         to_ret = (ep_length, ep_reward, actions, action_means, states)
-        
-        
         return to_ret
 
     @staticmethod
